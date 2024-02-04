@@ -25,7 +25,7 @@ fun HomeScreen(
             contentDescription = stringResource(id = R.string.splash_screen_image_info)
         )
         Text(
-            text = "Its me hello"
+            text = "Test text"
         )
     }
 }
