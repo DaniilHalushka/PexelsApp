@@ -2,4 +2,5 @@
     <string name="app_name">Pexels App</string>
     <string name="splash_screen_image_info">Splash Screen image</string>
     <string name="splash_screen_text">Pexels \nApp.</string>
+    <string name="custom_bottom_bar_icon_description">Selected Icon</string>
 </resources>
