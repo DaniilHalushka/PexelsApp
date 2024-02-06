@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.daniil.halushka.pexelsapp.R
+import com.daniil.halushka.pexelsapp.constants.Constants.SPLASH_SCREEN_ANIMATION_DURATION
 import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
 import com.daniil.halushka.pexelsapp.ui.theme.redColor
 import com.daniil.halushka.pexelsapp.ui.theme.whiteColor
@@ -37,7 +38,7 @@ fun SplashScreen(navigationController: NavController) {
 
     val alphaValue by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(durationMillis = 3000),
+        animationSpec = tween(durationMillis = SPLASH_SCREEN_ANIMATION_DURATION),
         label = "Splash Screen Animation"
     )
 
@@ -45,7 +46,7 @@ fun SplashScreen(navigationController: NavController) {
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
-        delay(3000)
+        delay(SPLASH_SCREEN_ANIMATION_DURATION.toLong())
         navigationController.navigate(
             route = ScreenRoutes.HomeScreen.screenType.name
         ) {

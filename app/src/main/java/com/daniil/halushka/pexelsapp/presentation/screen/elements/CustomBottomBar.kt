@@ -1,4 +1,4 @@
-package com.daniil.halushka.pexelsapp.presentation.navigation
+package com.daniil.halushka.pexelsapp.presentation.screen.elements
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -26,6 +26,21 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.daniil.halushka.pexelsapp.R
+import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
+
+fun isScreenActive(screenRouteNavigation: NavDestination?, screenRoute: ScreenRoutes): Boolean {
+    return screenRouteNavigation?.hierarchy?.any {
+        it.route == screenRoute.screenType.name
+    } == true
+}
+
+fun navigateToScreen(navigationController: NavHostController, screenType: String) {
+    navigationController.navigate(screenType) {
+        popUpTo(navigationController.graph.startDestinationId) {
+            inclusive = true
+        }
+    }
+}
 
 @Composable
 fun CustomBottomBar(navigationController: NavHostController) {
@@ -92,20 +107,6 @@ fun CustomBottomBarNavigation(
                 modifier = Modifier.size(24.dp, 2.dp),
                 color = colorOfActiveScreenInBottomBar
             )
-        }
-    }
-}
-
-fun isScreenActive(screenRouteNavigation: NavDestination?, screenRoute: ScreenRoutes): Boolean {
-    return screenRouteNavigation?.hierarchy?.any {
-        it.route == screenRoute.screenType.name
-    } == true
-}
-
-fun navigateToScreen(navigationController: NavHostController, screenType: String) {
-    navigationController.navigate(screenType) {
-        popUpTo(navigationController.graph.startDestinationId) {
-            inclusive = true
         }
     }
 }
