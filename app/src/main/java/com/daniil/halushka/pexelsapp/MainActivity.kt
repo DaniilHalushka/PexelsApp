@@ -9,11 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.daniil.halushka.pexelsapp.presentation.navigation.CustomBottomBar
 import com.daniil.halushka.pexelsapp.presentation.navigation.NavigationGraph
 import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
+import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomBottomBar
 import com.daniil.halushka.pexelsapp.ui.theme.PexelsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

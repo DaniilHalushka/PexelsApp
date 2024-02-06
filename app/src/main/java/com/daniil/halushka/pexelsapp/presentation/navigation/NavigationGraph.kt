@@ -1,13 +1,9 @@
 package com.daniil.halushka.pexelsapp.presentation.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -46,14 +42,14 @@ fun NavigationGraph(
         composable(
             ScreenRoutes.HomeScreen.screenType.name,
             enterTransition = {
-                slideInVertically(
-                    initialOffsetY = { it },
+                slideInHorizontally(
+                    initialOffsetX = { -it },
                     animationSpec = tween(1000)
                 )
             },
             exitTransition = {
-                slideOutVertically(
-                    targetOffsetY = { it },
+                slideOutHorizontally(
+                    targetOffsetX = { -it },
                     animationSpec = tween(1000)
                 )
             }
@@ -63,23 +59,15 @@ fun NavigationGraph(
         composable(
             ScreenRoutes.BookmarksScreen.screenType.name,
             enterTransition = {
-                fadeIn(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideIntoContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(1000)
                 )
             },
             exitTransition = {
-                fadeOut(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideOutOfContainer(
-                    animationSpec = tween(300, easing = EaseOut),
-                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(1000)
                 )
             }
         ) {
