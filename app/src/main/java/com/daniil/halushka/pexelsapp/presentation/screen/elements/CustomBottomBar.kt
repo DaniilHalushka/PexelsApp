@@ -30,7 +30,7 @@ import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
 
 fun isScreenActive(screenRouteNavigation: NavDestination?, screenRoute: ScreenRoutes): Boolean {
     return screenRouteNavigation?.hierarchy?.any {
-        it.route == screenRoute.screenType.name
+        it.route == screenRoute.screenType
     } == true
 }
 
@@ -73,40 +73,58 @@ fun CustomBottomBarNavigation(
     navigationController: NavHostController
 ) {
     val activeScreenInBottomBar = isScreenActive(screenRouteNavigation, bottomBarScreen)
-    val colorOfActiveScreenInBottomBar =
-        if (activeScreenInBottomBar) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
 
     Box(
         modifier = Modifier
             .size(64.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .clickable(onClick = {
-                    navigateToScreen(navigationController, bottomBarScreen.screenType.name)
-                }),
-            contentAlignment = Alignment.Center
-        ) {
-            val iconResource = if (activeScreenInBottomBar) bottomBarScreen.activeIcon
-            else bottomBarScreen.inactiveIcon
-            iconResource?.let {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp),
-                    painter = painterResource(id = it),
-                    contentDescription = stringResource(id = R.string.custom_bottom_bar_icon_description),
-                    tint = colorOfActiveScreenInBottomBar
-                )
-            }
-        }
-        AnimatedVisibility(visible = activeScreenInBottomBar) {
-            Divider(
-                modifier = Modifier.size(24.dp, 2.dp),
-                color = colorOfActiveScreenInBottomBar
+        val iconResource = if (activeScreenInBottomBar)
+            bottomBarScreen.activeIcon else bottomBarScreen.inactiveIcon
+
+        BottomBarIcon(
+            iconResource = iconResource,
+            activeScreenInBottomBar = activeScreenInBottomBar,
+            navigationController = navigationController,
+            screenType = bottomBarScreen.screenType
+        )
+    }
+}
+
+@Composable
+fun BottomBarIcon(
+    iconResource: Int?,
+    activeScreenInBottomBar: Boolean,
+    navigationController: NavHostController,
+    screenType: String
+) {
+    Box(
+        modifier = Modifier
+            .size(64.dp)
+            .clip(RoundedCornerShape(32.dp))
+            .clickable(onClick = {
+                navigateToScreen(navigationController, screenType)
+            }),
+        contentAlignment = Alignment.Center
+    ) {
+        iconResource?.let {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp),
+                painter = painterResource(id = it),
+                contentDescription = stringResource(
+                    id = R.string.custom_bottom_bar_icon_description
+                ),
+                tint = if (activeScreenInBottomBar)
+                    MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
             )
         }
+    }
+    AnimatedVisibility(visible = activeScreenInBottomBar) {
+        Divider(
+            modifier = Modifier.size(24.dp, 2.dp),
+            color = if (activeScreenInBottomBar)
+                MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
+        )
     }
 }
