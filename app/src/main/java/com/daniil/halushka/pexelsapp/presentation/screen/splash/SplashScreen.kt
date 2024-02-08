@@ -34,46 +34,62 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navigationController: NavController) {
-    var startAnimation by remember { mutableStateOf(false) }
-
-    val alphaValue by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(durationMillis = SPLASH_SCREEN_ANIMATION_DURATION),
-        label = "Splash Screen Animation"
-    )
+    val startAnimation = animateSplashScreen()
 
     SetStatusBarColor()
+
+    SplashScreenContent(startAnimation = startAnimation, navigationController = navigationController)
+}
+
+@Composable
+private fun animateSplashScreen(): Boolean {
+    var startAnimation by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
         delay(SPLASH_SCREEN_ANIMATION_DURATION.toLong())
-        navigationController.navigate(
-            route = ScreenRoutes.HomeScreen.screenType.name
-        ) {
-            popUpTo(ScreenRoutes.SplashScreen.screenType.name)
-        }
     }
 
-    SplashScreenContent(alphaValue = alphaValue)
+    return startAnimation
 }
 
 @Composable
-private fun SplashScreenContent(
-    alphaValue: Float,
-) {
+private fun SplashScreenContent(startAnimation: Boolean, navigationController: NavController) {
+    if (startAnimation) {
+        LaunchedEffect(Unit) {
+            delay(SPLASH_SCREEN_ANIMATION_DURATION.toLong())
+            navigationController.navigate(ScreenRoutes.HomeScreen.screenType) {
+                popUpTo(ScreenRoutes.SplashScreen.screenType)
+            }
+        }
+    }
+
+    SplashScreenLayout(startAnimation = startAnimation)
+}
+
+@Composable
+private fun SplashScreenLayout(startAnimation: Boolean) {
+    val alphaValue by animateFloatAsState(
+        targetValue = if (startAnimation) 1f else 0f,
+        animationSpec = tween(durationMillis = SPLASH_SCREEN_ANIMATION_DURATION),
+        label = stringResource(id = R.string.splash_screen_animation)
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(redColor),
         contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier.alpha(alpha = alphaValue),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            SplashScreenImage(alphaValue)
-            SplashScreenText()
-        }
+        SplashScreenContentBox(alphaValue = alphaValue)
+    }
+}
+
+@Composable
+private fun SplashScreenContentBox(alphaValue: Float) {
+    Box(modifier = Modifier.alpha(alpha = alphaValue), contentAlignment = Alignment.BottomEnd) {
+        SplashScreenImage(alphaValue = alphaValue)
+        SplashScreenText()
     }
 }
 
@@ -93,7 +109,7 @@ private fun SplashScreenText() {
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Bold,
         color = whiteColor,
-        textAlign = TextAlign.End
+        textAlign = TextAlign.End,
     )
 }
 

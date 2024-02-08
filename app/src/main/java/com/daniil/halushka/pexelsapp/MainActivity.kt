@@ -38,14 +38,14 @@ fun PexelsApp() {
 
     Scaffold(
         bottomBar = {
-            if (screenRouteNavigation in bottomBarScreens.map { it.screenType.name }) {
+            if (screenRouteNavigation in bottomBarScreens.map { it.screenType }) {
                 CustomBottomBar(navigationController = navigationController)
             }
         }
     ) {
         NavigationGraph(
             navController = navigationController,
-            startDestination = ScreenRoutes.SplashScreen.screenType.name
+            startDestination = ScreenRoutes.SplashScreen.screenType
         )
     }
 

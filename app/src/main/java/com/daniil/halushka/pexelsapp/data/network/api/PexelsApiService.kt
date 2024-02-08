@@ -19,8 +19,8 @@ interface PexelsApiService {
     suspend fun getPhotosBySearch(
         @Header("Authorization") apiKey: String,
         @Query("query") query: String,
-        @Query("per_page") perPage: Int,
         @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
     ): ResponseFromApi
 
     @GET("curated")
