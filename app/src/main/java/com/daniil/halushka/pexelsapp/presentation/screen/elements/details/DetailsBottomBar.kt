@@ -51,8 +51,8 @@ fun DetailsBottomBar(
         )
 
         BookmarksButton(
-            onClick = bookmarkButtonClick,
             addPhotoToBookmarks = addPhotoToBookmarks,
+            onClick = bookmarkButtonClick,
             backgroundColor = primaryColor,
             contentColor = if (addPhotoToBookmarks) tertiaryColor else secondaryColor
         )
@@ -88,12 +88,12 @@ private fun DownloadButton(
                 tint = Color.White
             )
         }
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = stringResource(id = R.string.download),
-                textAlign = TextAlign.Center
-            )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(),
+            text = stringResource(id = R.string.download),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -107,9 +107,9 @@ private fun BookmarksButton(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(24.dp))
+            .size(48.dp)
             .background(backgroundColor)
-            .clickable { onClick() }
-            .size(48.dp),
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Icon(

@@ -17,7 +17,6 @@ class DownloadImageImplementation(
         destinationFileName: String
     ): Long {
         val downloadRequest = buildDownloadRequest(imageUrl, destinationFileName)
-
         return try {
             showToastMessage(R.string.started_download)
             downloadManager.enqueue(downloadRequest)
@@ -32,30 +31,25 @@ class DownloadImageImplementation(
         destinationFileName: String
     ): DownloadManager.Request {
         val fileName = "$destinationFileName.jpg"
-
-        return DownloadManager.Request(imageUrl.toUri())
-            .setMimeType("image/jpeg")
-            .setAllowedNetworkTypes(
+        return DownloadManager.Request(imageUrl.toUri()).apply {
+            setMimeType("image/jpeg")
+            setAllowedNetworkTypes(
                 DownloadManager.Request.NETWORK_WIFI
                         or DownloadManager.Request.NETWORK_MOBILE
             )
-            .setNotificationVisibility(
+            setNotificationVisibility(
                 DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
             )
-            .setTitle(fileName)
-            .setDestinationInExternalPublicDir(
+            setTitle(fileName)
+            setDestinationInExternalPublicDir(
                 Environment.DIRECTORY_DOWNLOADS,
                 fileName
             )
+        }
     }
 
-
     private fun showToastMessage(messageResId: Int, vararg formatArgs: Any) {
-        val message = if (formatArgs.isEmpty()) {
-            appContext.getString(messageResId)
-        } else {
-            appContext.getString(messageResId, *formatArgs)
-        }
+        val message = appContext.getString(messageResId, *formatArgs)
         Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show()
     }
 }

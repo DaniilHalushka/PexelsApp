@@ -21,7 +21,7 @@ import com.daniil.halushka.pexelsapp.data.download.DownloadImageImplementation
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
 import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomProgressBar
-import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.CustomTopBar
+import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomTopBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.DetailsBottomBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.PhotoInformation
 
@@ -32,10 +32,13 @@ fun DetailsScreen(
     viewModel: DetailsScreenViewModel = hiltViewModel()
 ) {
 
-
     when (navigationController.previousBackStackEntry?.destination?.route) {
         ScreenRoutes.HomeScreen.screenType -> {
             viewModel.getHomeScreenPhoto(id?.toInt())
+        }
+
+        ScreenRoutes.BookmarksScreen.screenType -> {
+            viewModel.getPhotoFromBookmarksScreen(id?.toInt())
         }
     }
 

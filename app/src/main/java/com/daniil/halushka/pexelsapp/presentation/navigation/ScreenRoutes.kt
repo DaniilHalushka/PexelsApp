@@ -25,5 +25,5 @@ sealed class ScreenRoutes(
         screenType = "Bookmarks",
         activeIcon = R.drawable.ic_bookmark_button_active,
         inactiveIcon = R.drawable.ic_bookmark_button_inactive,
-        )
+    )
 }
