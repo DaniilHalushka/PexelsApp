@@ -1,10 +1,15 @@
 package com.daniil.halushka.pexelsapp.data.models
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhotoSrc
 import java.io.Serializable
 
+@Entity("bookmark_photo")
 data class Photo(
+    @PrimaryKey
     val id: Int,
     val width: Int,
     val height: Int,
@@ -13,6 +18,7 @@ data class Photo(
     val photographerUrl: String?,
     val photographerId: Int?,
     val avgColor: String?,
+    @Embedded(prefix = "src_")
     val src: PhotoSrc,
     val liked: Boolean,
     val alt: String

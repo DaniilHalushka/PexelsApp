@@ -28,6 +28,6 @@ fun CustomProgressBar(
                 .padding(top = 12.dp),
             color = MaterialTheme.colorScheme.tertiary,
 
-        )
+            )
     }
 }

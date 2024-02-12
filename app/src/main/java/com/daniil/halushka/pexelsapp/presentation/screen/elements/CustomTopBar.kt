@@ -1,10 +1,9 @@
-package com.daniil.halushka.pexelsapp.presentation.screen.elements.details
+package com.daniil.halushka.pexelsapp.presentation.screen.elements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,34 +30,33 @@ import com.daniil.halushka.pexelsapp.R
 fun CustomTopBar(
     author: String,
     isNavigationExist: Boolean,
-    clickOnNavigationItem: () -> Unit
-){
+    clickOnNavigationItem: () -> Unit = {}
+) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val contentColor = MaterialTheme.colorScheme.onBackground
 
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            ,
+            .fillMaxWidth(),
         color = backgroundColor,
     ) {
         Row(
             modifier = Modifier
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isNavigationExist) {
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .height(40.dp)
+                        .size(40.dp)
                         .background(MaterialTheme.colorScheme.primary)
                 ) {
                     IconButton(
                         onClick = clickOnNavigationItem,
                         modifier = Modifier
-                            .size(40.dp)
-                            .padding(vertical = 8.dp)
+                            .clip(RoundedCornerShape(12.dp)),
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,

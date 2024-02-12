@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.daniil.halushka.pexelsapp.R
 import com.daniil.halushka.pexelsapp.constants.Constants.SPLASH_SCREEN_ANIMATION_DURATION
@@ -84,6 +86,7 @@ private fun SplashScreenLayout(startAnimation: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .size(240.dp)
             .background(redColor),
         contentAlignment = Alignment.Center
     ) {

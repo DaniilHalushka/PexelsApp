@@ -60,7 +60,7 @@ class HomeScreenViewModel @Inject constructor(
         photos.emit(listOfCuratedPhotos)
     }
 
-    suspend fun getFeaturedCollections() {
+    private suspend fun getFeaturedCollections() {
         val listOfFeaturedCollections = networkRepositoryInterface
             .getFeaturedCollections(
                 page = START_PAGE,
