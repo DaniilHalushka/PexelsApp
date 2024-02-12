@@ -38,7 +38,10 @@ fun SplashScreen(navigationController: NavController) {
 
     SetStatusBarColor()
 
-    SplashScreenContent(startAnimation = startAnimation, navigationController = navigationController)
+    SplashScreenContent(
+        startAnimation = startAnimation,
+        navigationController = navigationController
+    )
 }
 
 @Composable
@@ -54,7 +57,10 @@ private fun animateSplashScreen(): Boolean {
 }
 
 @Composable
-private fun SplashScreenContent(startAnimation: Boolean, navigationController: NavController) {
+private fun SplashScreenContent(
+    startAnimation: Boolean,
+    navigationController: NavController
+) {
     if (startAnimation) {
         LaunchedEffect(Unit) {
             delay(SPLASH_SCREEN_ANIMATION_DURATION.toLong())
@@ -87,7 +93,11 @@ private fun SplashScreenLayout(startAnimation: Boolean) {
 
 @Composable
 private fun SplashScreenContentBox(alphaValue: Float) {
-    Box(modifier = Modifier.alpha(alpha = alphaValue), contentAlignment = Alignment.BottomEnd) {
+    Box(
+        modifier = Modifier
+            .alpha(alpha = alphaValue),
+        contentAlignment = Alignment.BottomEnd
+    ) {
         SplashScreenImage(alphaValue = alphaValue)
         SplashScreenText()
     }

@@ -12,5 +12,8 @@
     <string name="download_icon_description">Download Icon</string>
     <string name="download">Download</string>
     <string name="bookmarks_button_description">Bookmarks Button</string>
+    <string name="download_completed_message">Bookmarks Button</string>
+    <string name="started_download">Download Started!</string>
+    <string name="failed_download">Download Failed :(</string>
 
 </resources>
