@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.daniil.halushka.pexelsapp.data.download.DownloadImageImplementation
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
 import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomProgressBar
@@ -30,8 +31,7 @@ fun DetailsScreen(
     navigationController: NavController,
     viewModel: DetailsScreenViewModel = hiltViewModel()
 ) {
-    val photo by viewModel.choosePhoto.collectAsStateWithLifecycle()
-    val addPhotoToBookmark by viewModel.addPhotoToBookmarks.collectAsStateWithLifecycle()
+
 
     when (navigationController.previousBackStackEntry?.destination?.route) {
         ScreenRoutes.HomeScreen.screenType -> {
@@ -42,20 +42,19 @@ fun DetailsScreen(
     SetStatusBarColor()
 
     DetailsContent(
-        photo = photo,
         navigationController = navigationController,
-        addPhotoToBookmark = addPhotoToBookmark,
         viewModel = viewModel
     )
 }
 
 @Composable
 private fun DetailsContent(
-    photo: DomainPhoto?,
     navigationController: NavController,
-    addPhotoToBookmark: Boolean,
     viewModel: DetailsScreenViewModel
 ) {
+    val photo by viewModel.choosePhoto.collectAsStateWithLifecycle()
+    val addPhotoToBookmark by viewModel.addPhotoToBookmarks.collectAsStateWithLifecycle()
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -78,10 +77,10 @@ private fun DetailsContent(
             RenderCustomProgressBar(photo == null)
 
             if (photo != null) {
-                RenderPhotoInformation(format = photo.src.portrait)
+                RenderPhotoInformation(format = photo?.src?.portrait)
 
                 RenderDetailsBottomBar(
-                    photo = photo,
+                    photo = photo!!,
                     viewModel = viewModel,
                     addPhotoToBookmark = addPhotoToBookmark,
                 )
@@ -110,10 +109,15 @@ private fun RenderDetailsBottomBar(
     viewModel: DetailsScreenViewModel,
     photo: DomainPhoto
 ) {
+    val imageDownloader = DownloadImageImplementation(LocalContext.current)
+
     DetailsBottomBar(
         addPhotoToBookmarks = addPhotoToBookmark,
         downloadButtonClick = {
-            /* TODO() */
+            imageDownloader.downloadFile(
+                photo.src.original,
+                photo.alt.trim()
+            )
         },
         bookmarkButtonClick = {
             viewModel.changeStateOnBookmarksButton(photo)
