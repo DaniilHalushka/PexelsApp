@@ -1,5 +1,7 @@
 package com.daniil.halushka.pexelsapp.domain.models
 
+import com.daniil.halushka.pexelsapp.data.models.Photo
+import com.daniil.halushka.pexelsapp.data.models.PhotoSrc
 import java.io.Serializable
 
 data class DomainPhoto(
@@ -26,3 +28,31 @@ data class DomainPhotoSrc(
     val landscape: String,
     val tiny: String
 )
+
+fun DomainPhoto.toPhoto(): Photo {
+    val (id, width, height, url, photographer, photographerUrl, photographerId, avgColor, src, liked, alt) = this
+    val (original, large2x, large, medium, small, portrait, landscape, tiny) = src
+
+    return Photo(
+        id = id,
+        width = width,
+        height = height,
+        url = url,
+        photographer = photographer,
+        photographerUrl = photographerUrl,
+        photographerId = photographerId,
+        avgColor = avgColor,
+        src = PhotoSrc(
+            original = original,
+            large2x = large2x,
+            large = large,
+            medium = medium,
+            small = small,
+            portrait = portrait,
+            landscape = landscape,
+            tiny = tiny
+        ),
+        liked = liked,
+        alt = alt
+    )
+}

@@ -9,18 +9,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
 import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomProgressBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.CustomTopBar
+import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.DetailsBottomBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.PhotoInformation
 
 @Composable
@@ -29,7 +30,8 @@ fun DetailsScreen(
     navigationController: NavController,
     viewModel: DetailsScreenViewModel = hiltViewModel()
 ) {
-    val photo by viewModel.choosePhoto.collectAsState()
+    val photo by viewModel.choosePhoto.collectAsStateWithLifecycle()
+    val addPhotoToBookmark by viewModel.addPhotoToBookmarks.collectAsStateWithLifecycle()
 
     when (navigationController.previousBackStackEntry?.destination?.route) {
         ScreenRoutes.HomeScreen.screenType -> {
@@ -41,14 +43,18 @@ fun DetailsScreen(
 
     DetailsContent(
         photo = photo,
-        navigationController = navigationController
+        navigationController = navigationController,
+        addPhotoToBookmark = addPhotoToBookmark,
+        viewModel = viewModel
     )
 }
 
 @Composable
 private fun DetailsContent(
     photo: DomainPhoto?,
-    navigationController: NavController
+    navigationController: NavController,
+    addPhotoToBookmark: Boolean,
+    viewModel: DetailsScreenViewModel
 ) {
     Scaffold(
         modifier = Modifier
@@ -73,6 +79,12 @@ private fun DetailsContent(
 
             if (photo != null) {
                 RenderPhotoInformation(format = photo.src.portrait)
+
+                RenderDetailsBottomBar(
+                    photo = photo,
+                    viewModel = viewModel,
+                    addPhotoToBookmark = addPhotoToBookmark,
+                )
             }
         }
     }
@@ -90,6 +102,23 @@ private fun RenderCustomProgressBar(
 @Composable
 private fun RenderPhotoInformation(format: String?) {
     PhotoInformation(format = format)
+}
+
+@Composable
+private fun RenderDetailsBottomBar(
+    addPhotoToBookmark: Boolean,
+    viewModel: DetailsScreenViewModel,
+    photo: DomainPhoto
+) {
+    DetailsBottomBar(
+        addPhotoToBookmarks = addPhotoToBookmark,
+        downloadButtonClick = {
+            /* TODO() */
+        },
+        bookmarkButtonClick = {
+            viewModel.changeStateOnBookmarksButton(photo)
+        }
+    )
 }
 
 @Composable

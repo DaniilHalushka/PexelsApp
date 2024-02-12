@@ -9,5 +9,8 @@
     <string name="history_icon_description">History Icon</string>
     <string name="photo_information">Photo</string>
     <string name="custom_top_bar_back_button">Back button</string>
+    <string name="download_icon_description">Download Icon</string>
+    <string name="download">Download</string>
+    <string name="bookmarks_button_description">Bookmarks Button</string>
 
 </resources>
