@@ -23,6 +23,8 @@ class HomeScreenViewModel @Inject constructor(
     val userRequest = MutableStateFlow("")
     val currentFeaturedCollection = MutableStateFlow("")
 
+    val activeError = MutableStateFlow(false)
+
     init {
         viewModelScope.launch {
             getFeaturedCollections()
@@ -48,6 +50,7 @@ class HomeScreenViewModel @Inject constructor(
                 page = START_PAGE,
                 perPage = PHOTOS_PER_PAGE
             )
+        activeError.value = listOfSearchedPhotos.isEmpty()
         photos.emit(listOfSearchedPhotos)
     }
 
@@ -57,15 +60,17 @@ class HomeScreenViewModel @Inject constructor(
                 page = START_PAGE,
                 perPage = PHOTOS_PER_PAGE
             )
+        activeError.value = listOfCuratedPhotos.isEmpty()
         photos.emit(listOfCuratedPhotos)
     }
 
-    private suspend fun getFeaturedCollections() {
+     suspend fun getFeaturedCollections() {
         val listOfFeaturedCollections = networkRepositoryInterface
             .getFeaturedCollections(
                 page = START_PAGE,
                 perPage = QUANTITY_OF_COLLECTIONS
             )
+        activeError.value = listOfFeaturedCollections.isEmpty()
         stateOfFeaturedCollection.emit(listOfFeaturedCollections)
     }
 }
