@@ -18,9 +18,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.daniil.halushka.pexelsapp.R
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
+import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomProgressBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomTopBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.bookmarks.GridWithBookmarks
+import com.daniil.halushka.pexelsapp.presentation.screen.utils.FailedResultScreen
 
 @Composable
 fun BookmarksScreen(
@@ -32,6 +34,7 @@ fun BookmarksScreen(
     }
 
     val bookmarkPhotos by viewModel.bookmarkPhotos.collectAsStateWithLifecycle()
+    val actualError by viewModel.actualError.collectAsStateWithLifecycle()
 
     SetStatusBarColor()
 
@@ -49,14 +52,32 @@ fun BookmarksScreen(
                 .fillMaxSize()
         ) {
             RenderCustomProgressBar(progress = bookmarkPhotos.isEmpty())
-            if (bookmarkPhotos.isNotEmpty()) {
+            if (bookmarkPhotos.isNotEmpty() && !actualError) {
                 RenderGridWithBookmarks(
                     bookmarkPhotos = bookmarkPhotos,
                     navigationController = navigationController
                 )
+            } else if (actualError) {
+                RenderFailedResultScreen(navigationController = navigationController)
             }
         }
     }
+}
+
+@Composable
+private fun RenderFailedResultScreen(
+    navigationController: NavController
+) {
+    FailedResultScreen(
+        result = stringResource(id = R.string.no_bookmarks),
+        onClick = {
+            navigationController.navigate(ScreenRoutes.HomeScreen.screenType) {
+                popUpTo(navigationController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
+        }
+    )
 }
 
 @Composable
