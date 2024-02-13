@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +22,8 @@ fun CustomProgressBar(
     ) {
         LinearProgressIndicator(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .padding(top = 12.dp),
+                .padding(top = 12.dp)
+                .fillMaxWidth(),
             color = MaterialTheme.colorScheme.tertiary,
 
             )

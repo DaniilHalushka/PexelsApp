@@ -13,10 +13,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.daniil.halushka.pexelsapp.R
 import com.daniil.halushka.pexelsapp.data.download.DownloadImageImplementation
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
 import com.daniil.halushka.pexelsapp.presentation.navigation.ScreenRoutes
@@ -24,6 +26,7 @@ import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomProgress
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomTopBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.DetailsBottomBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.details.PhotoInformation
+import com.daniil.halushka.pexelsapp.presentation.screen.utils.FailedResultScreen
 
 @Composable
 fun DetailsScreen(
@@ -87,9 +90,23 @@ private fun DetailsContent(
                     viewModel = viewModel,
                     addPhotoToBookmark = addPhotoToBookmark,
                 )
+            } else {
+                RenderFailedResultScreen(navigationController = navigationController)
             }
         }
     }
+}
+
+@Composable
+fun RenderFailedResultScreen(
+    navigationController: NavController
+) {
+    FailedResultScreen(
+        result = stringResource(id = R.string.no_details),
+        onClick = {
+            navigationController.popBackStack()
+        }
+    )
 }
 
 @Composable

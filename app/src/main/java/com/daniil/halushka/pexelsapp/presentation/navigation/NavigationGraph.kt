@@ -47,13 +47,13 @@ fun NavigationGraph(
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { -it },
-                    animationSpec = tween(1000)
+                    animationSpec = tween(1500)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
                     targetOffsetX = { -it },
-                    animationSpec = tween(1000)
+                    animationSpec = tween(1500)
                 )
             }
         ) {
@@ -64,13 +64,13 @@ fun NavigationGraph(
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { it },
-                    animationSpec = tween(1000)
+                    animationSpec = tween(1500)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
                     targetOffsetX = { it },
-                    animationSpec = tween(1000)
+                    animationSpec = tween(1500)
                 )
             }
         ) {

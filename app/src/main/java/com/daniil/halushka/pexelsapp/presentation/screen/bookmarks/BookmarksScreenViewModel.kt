@@ -14,6 +14,7 @@ class BookmarksScreenViewModel @Inject constructor(
     private val databaseRepositoryInterface: DatabaseRepositoryInterface
 ) : ViewModel() {
     val bookmarkPhotos = MutableStateFlow(emptyList<DomainPhoto>())
+    val actualError = MutableStateFlow(false)
 
     init {
         loadBookmarkPhotos()
@@ -23,6 +24,7 @@ class BookmarksScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val bookmarks = databaseRepositoryInterface.getBookmarksList()
             bookmarkPhotos.value = bookmarks
+            actualError.value = bookmarks.isEmpty()
         }
     }
 }
