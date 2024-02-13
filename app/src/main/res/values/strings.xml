@@ -18,6 +18,10 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="name_surname">Name Surname</string>
     <string name="context_is_null">Context is null in DownloadReceiver</string>
-
+    <string name="icon_no_network">No network</string>
+    <string name="try_again">Try Again</string>
+    <string name="explore">Explore</string>
+    <string name="no_results_found">No results found</string>
+    <string name="check_your_internet_connection">Check your Internet connection</string>
 
 </resources>

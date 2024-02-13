@@ -1,6 +1,8 @@
 package com.daniil.halushka.pexelsapp.presentation.screen.home
 
 import android.app.Activity
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -12,15 +14,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.daniil.halushka.pexelsapp.R
 import com.daniil.halushka.pexelsapp.domain.models.DomainFeaturedCollection
 import com.daniil.halushka.pexelsapp.domain.models.DomainPhoto
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.CustomProgressBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.home.CustomSearchBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.home.FeatureCollectionsBar
 import com.daniil.halushka.pexelsapp.presentation.screen.elements.home.GridWithPhotos
+import com.daniil.halushka.pexelsapp.presentation.screen.utils.FailedResultScreen
+import com.daniil.halushka.pexelsapp.presentation.screen.utils.checkInternetConnection
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 enum class SearchBarState {
@@ -33,36 +40,90 @@ fun HomeScreen(
     navigationController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
-
     val selectedCollection by viewModel.currentFeaturedCollection.collectAsStateWithLifecycle()
     val collections by viewModel.stateOfFeaturedCollection.collectAsStateWithLifecycle()
     val photoList by viewModel.photos.collectAsStateWithLifecycle()
+    val activeError by viewModel.activeError.collectAsStateWithLifecycle()
+    val userRequest by viewModel.userRequest.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     SetStatusBarColor()
 
+    CheckAndShowInternetAlert(context, viewModel)
+
+    RenderContent(
+        selectedCollection = selectedCollection,
+        collections = collections,
+        photoList = photoList,
+        navigationController = navigationController,
+        viewModel = viewModel,
+        activeError = activeError,
+        coroutineScope = coroutineScope,
+        userRequest = userRequest,
+        onSearchBarStateChanged = {},
+        onSearch = {},
+        hasInternet = checkInternetConnection(context = context)
+    )
+}
+
+
+@Composable
+private fun RenderContent(
+    selectedCollection: String,
+    collections: List<DomainFeaturedCollection>,
+    photoList: List<DomainPhoto>,
+    navigationController: NavController,
+    viewModel: HomeScreenViewModel,
+    activeError: Boolean,
+    coroutineScope: CoroutineScope,
+    userRequest: String,
+    onSearchBarStateChanged: (SearchBarState) -> Unit,
+    onSearch: (String) -> Unit,
+    hasInternet: Boolean
+) {
     Column {
-        RenderSearchBar(viewModel = viewModel)
-        RenderFeatureCollectionsBar(
-            selectedCollection = selectedCollection,
-            collections = collections,
-            viewModel = viewModel
-        )
-
-        RenderCustomProgressBar(
-            progress = photoList.isEmpty()
-        )
-
-        RenderGridWithPhotos(
-            photoList = photoList,
-            navigationController = navigationController
-        )
+        if (hasInternet) {
+            RenderSearchBar(
+                viewModel = viewModel,
+                userRequest = userRequest,
+                onSearchBarStateChanged = onSearchBarStateChanged,
+                onSearch = onSearch
+            )
+            RenderFeatureCollectionsBar(
+                selectedCollection = selectedCollection,
+                collections = collections,
+                viewModel = viewModel,
+                coroutineScope = coroutineScope
+            )
+            RenderCustomProgressBar(progress = photoList.isEmpty())
+            if (!activeError && photoList.isNotEmpty()) {
+                RenderGridWithPhotos(
+                    photoList = photoList,
+                    navigationController = navigationController
+                )
+            } else if (activeError) {
+                RenderFailedResultScreen(
+                    result = stringResource(id = R.string.no_results_found),
+                    onRetryClicked = {
+                        coroutineScope.launch {
+                            viewModel.getCuratedPhotos()
+                        }
+                    }
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun RenderSearchBar(viewModel: HomeScreenViewModel) {
+private fun RenderSearchBar(
+    viewModel: HomeScreenViewModel,
+    userRequest: String,
+    onSearchBarStateChanged: (SearchBarState) -> Unit,
+    onSearch: (String) -> Unit
+) {
     var searchBarState by remember { mutableStateOf(SearchBarState.INACTIVE) }
-    val userRequest by viewModel.userRequest.collectAsStateWithLifecycle()
     val userRequestsHistory = remember { mutableListOf<String>() }
 
     LaunchedEffect(key1 = userRequest) {
@@ -80,10 +141,12 @@ private fun RenderSearchBar(viewModel: HomeScreenViewModel) {
         onSearch = {
             userRequestsHistory.add(it)
             searchBarState = SearchBarState.INACTIVE
+            onSearch(it)
         },
         userRequestsHistory = userRequestsHistory,
     ) {
         searchBarState = if (it) SearchBarState.ACTIVE else SearchBarState.INACTIVE
+        onSearchBarStateChanged(searchBarState)
     }
 }
 
@@ -91,10 +154,9 @@ private fun RenderSearchBar(viewModel: HomeScreenViewModel) {
 private fun RenderFeatureCollectionsBar(
     selectedCollection: String,
     collections: List<DomainFeaturedCollection>,
-    viewModel: HomeScreenViewModel
+    viewModel: HomeScreenViewModel,
+    coroutineScope: CoroutineScope
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     FeatureCollectionsBar(
         idOfSelectedCollection = selectedCollection,
         parts = collections,
@@ -130,6 +192,48 @@ private fun RenderGridWithPhotos(
             )
         }
     )
+}
+
+@Composable
+private fun RenderHomeEmptyScreen(onRetryClicked: () -> Unit) {
+    HomeEmptyScreen(onClick = onRetryClicked)
+}
+
+@Composable
+private fun RenderFailedResultScreen(
+    result: String,
+    onRetryClicked: () -> Unit
+) {
+    FailedResultScreen(
+        result = result,
+        onClick = onRetryClicked
+    )
+}
+
+fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+}
+
+@Composable
+fun CheckAndShowInternetAlert(
+    context: Context,
+    viewModel: HomeScreenViewModel
+) {
+    val coroutineScope = rememberCoroutineScope()
+    if (!checkInternetConnection(context)) {
+        showToast(
+            context,
+            context.getString(R.string.check_your_internet_connection)
+        )
+        RenderHomeEmptyScreen(
+            onRetryClicked = {
+                coroutineScope.launch {
+                    viewModel.getCuratedPhotos()
+                    viewModel.getFeaturedCollections()
+                }
+            }
+        )
+    }
 }
 
 @Composable
