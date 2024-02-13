@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Pexels App</string>
+    <string name="splash_screen_image_info">Splash Screen image</string>
+    <string name="splash_screen_text">Pexels \nApp.</string>
+    <string name="splash_screen_animation">Splash Screen Animation</string>
+    <string name="custom_bottom_bar_icon_description">Selected Icon</string>
+    <string name="custom_search_bar_placeholder">Поиск</string>
+    <string name="custom_search_bar_icon_description">Search Icon</string>
+    <string name="history_icon_description">History Icon</string>
+    <string name="photo_information">Photo</string>
+    <string name="custom_top_bar_back_button">Back button</string>
+    <string name="download_icon_description">Download Icon</string>
+    <string name="download">Скачать</string>
+    <string name="bookmarks_button_description">Bookmarks Button</string>
+    <string name="download_completed_message">Скачивание завершено!</string>
+    <string name="started_download">Скачивание началось!</string>
+    <string name="failed_download">Скачаивание было неудачным :(</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="name_surname">Имя Фамилия</string>
+    <string name="context_is_null">Context is null in DownloadReceiver</string>
+    <string name="icon_no_network">No network</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="explore">Вернуться</string>
+    <string name="no_results_found">Изображения не найдены</string>
+    <string name="check_your_internet_connection">Проверьте свое интернет-соединение</string>
+    <string name="no_bookmarks">Вы еще ничего не добавляли в закладки</string>
+    <string name="no_details">Изображение не найдено</string>
+
+</resources>
